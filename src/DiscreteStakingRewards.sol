@@ -23,6 +23,13 @@ contract DiscreteStakingRewards {
     IERC20 public immutable rewardToken;
 
     mapping(address => uint256) public balanceOf;
+    uint256 public totalSupply;
+
+    uint256 private constant MULTIPLIER = 1e18;
+    uint256 private rewardIndex;
+
+    mapping(address => uint256) private rewardIndexOf;
+    mapping(address => uint256) private earned;
 
     constructor(address _stakingToken, address _rewardToken) {
         stakingToken = IERC20(_stakingToken);
