@@ -49,4 +49,34 @@ contract DiscreteStakingRewards {
     function calculateRewardsEarned(address account) external view returns (uint256) {
         return earned[account] + _calculateRewards(account);
     }
+
+    function _updateReward(address account) private {
+        earned[account] += _calculateRewards(account);
+        rewardIndexOf[account] = rewardIndex;
+    }
+
+    function stake(uint256 amount) external {
+        _updateReward(msg.sender);
+        balanceOf[msg.sender] += amount;
+        totalSupply += amount;
+
+        stakingToken.transferFrom(msg.sender, address(this), amount);
+    }
+
+    function unstake(uint256 amount) external {
+        _updateReward(msg.sender);
+        balanceOf[msg.sender] -= amount;
+        totalSupply -= amount;
+        stakingToken.transfer(msg.sender, amount);
+    }
+
+    function claim() external returns (uint256) {
+        _updateReward(msg.sender);
+        uint256 reward = earned[msg.sender];
+        if (reward > 0) {
+            earned[msg.sender] = 0;
+            rewardToken.transfer(msg.sender, reward);
+        }
+        return reward;
+    }
 }
