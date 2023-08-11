@@ -45,4 +45,8 @@ contract DiscreteStakingRewards {
         uint256 shares = balanceOf[account];
         return (shares * (rewardIndex - rewardIndexOf[account]) / MULTIPLIER);
     }
+
+    function calculateRewardsEarned(address account) external view returns (uint256) {
+        return earned[account] + _calculateRewards(account);
+    }
 }
