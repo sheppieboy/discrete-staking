@@ -35,4 +35,9 @@ contract DiscreteStakingRewards {
         stakingToken = IERC20(_stakingToken);
         rewardToken = IERC20(_rewardToken);
     }
+
+    function updateRewardIndex(uint256 reward) external {
+        rewardToken.transferFrom(msg.sender, address(this), reward);
+        rewardIndex += (reward * MULTIPLIER) / totalSupply;
+    }
 }
