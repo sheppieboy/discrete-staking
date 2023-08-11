@@ -40,4 +40,9 @@ contract DiscreteStakingRewards {
         rewardToken.transferFrom(msg.sender, address(this), reward);
         rewardIndex += (reward * MULTIPLIER) / totalSupply;
     }
+
+    function _calculateRewards(address account) private view returns (uint256) {
+        uint256 shares = balanceOf[account];
+        return (shares * (rewardIndex - rewardIndexOf[account]) / MULTIPLIER);
+    }
 }
